@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Football Chatbot</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Fantasy Football Chatbot</h1>
+    
+    <div id="chatbox" style="border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: auto;">
+        <!-- Chat messages will be appended here -->
+    </div>
+
+    <div style="margin-top: 10px;">
+        <input type="text" id="userInput" placeholder="Type your message here..." style="width: 80%;">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const message = document.getElementById('userInput').value;
+            if (message.trim() === '') return;  // Prevent sending empty messages
+
+            // Display user's message in the chatbox
+            const chatbox = document.getElementById('chatbox');
+            const userMessage = document.createElement('div');
+            userMessage.textContent = `You: ${message}`;
+            chatbox.appendChild(userMessage);
+
+            // Clear the input box
+            document.getElementById('userInput').value = '';
+
+            // Send message to server
+            fetch(`/chatbot?message=${encodeURIComponent(message)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const botResponse = document.createElement('div');
+                    if (data.error) {
+                        botResponse.textContent = `Bot: ${data.error}`;
+                    } else if (Array.isArray(data.response)) {
+                        // Handle array of articles
+                        botResponse.innerHTML = 'Bot: ' + data.response.map(article => `<a href="${article.url}" target="_blank">${article.title}</a>`).join('<br>');
+                    } else {
+                        botResponse.textContent = `Bot: ${data.response}`;
+                    }
+                    chatbox.appendChild(botResponse);
+                    chatbox.scrollTop = chatbox.scrollHeight;  // Scroll to the latest message
+                })
+                .catch(error => {
+                    const botError = document.createElement('div');
+                    botError.textContent = 'Bot: There was an error processing your request.';
+                    chatbox.appendChild(botError);
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+</html>
