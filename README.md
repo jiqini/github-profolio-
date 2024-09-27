@@ -2,7 +2,7 @@
 
 ## Project Description
 
-The Fantasy Football Chatbot is an interactive tool designed to assist fantasy football enthusiasts in making informed decisions about their team management. This chatbot helps users with:
+The Fantasy Football Chatbot is an interactive tool designed to assist fantasy football enthusiasts/beginners in making informed decisions about their team management. This chatbot helps users with:
 
 - Start/Sit decisions for their fantasy football lineup
 - Providing the most relevant and up-to-date news articles about specific players
